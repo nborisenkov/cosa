@@ -1,0 +1,45 @@
+<VirtualHost 172.27.65.94:80>
+        ServerAdmin admin@example.com
+        ServerName cosa.example.com
+        ServerAlias www.cosa.example.com
+        DocumentRoot /storage/hd2/cosa/www
+
+        <Directory /storage/hd2/cosa/www>
+                Options FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+        </Directory>
+
+        ScriptAlias /cgi-bin/ /storage/hd2/cosa/www/cgi-bin/
+        <Directory "/storage/hd2/cosa/www/cgi-bin">
+                AllowOverride None
+                Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+                Order allow,deny
+                Allow from all
+        </Directory>
+
+        Alias /configs /storage/hd2/cosa/configs
+        <Directory /storage/hd2/cosa/configs>
+                Options FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+        </Directory>
+
+        <FilesMatch "\.cfg\.SN\-">
+            ForceType application/octet-stream
+            Header set Content-Disposition attachment
+        </FilesMatch>
+
+        <FilesMatch "\.cfg">
+            ForceType application/octet-stream
+            Header set Content-Disposition attachment
+        </FilesMatch>
+
+        ErrorLog ${APACHE_LOG_DIR}/cosa-error.log
+
+        LogLevel warn
+
+        CustomLog ${APACHE_LOG_DIR}/cosa-access.log combined
+</VirtualHost>

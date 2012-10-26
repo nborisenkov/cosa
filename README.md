@@ -1,4 +1,4 @@
 cosa
 ====
 
-R5000 configuration management account
+Script for configuring R5000 (Skyman) devices
