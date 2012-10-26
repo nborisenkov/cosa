@@ -549,20 +549,25 @@ sub mail_alert {
     # Отправка сообщений
     my $smtp = Net::SMTP->new(Host => $mail_serv, Debug => 0);
 
-    for (@emails) {
-        my $mail_addr = $_;
-        $smtp->mail($from_addr);
-        $smtp->to($mail_addr);
-        $smtp->data();
-        $smtp->datasend("$to_str\n");
-        $smtp->datasend("Subject: $subject\n");
-        $smtp->datasend("Content-Type: text/html; charset=UTF-8\n");
-        $smtp->datasend("\n");
-        $smtp->datasend("$message\n\n");
-        $smtp->dataend();
-    }
+    if (!defined $smtp) {
+        print "FAIL - Error sending email. Use Net::SMTP->new with Debug => 1\n";
+        print $log_file_h "FAIL - Error sending email. Use Net::SMTP->new with Debug => 1\n";
+    } else {
+        for (@emails) {
+            my $mail_addr = $_;
+            $smtp->mail($from_addr);
+            $smtp->to($mail_addr);
+            $smtp->data();
+            $smtp->datasend("$to_str\n");
+            $smtp->datasend("Subject: $subject\n");
+            $smtp->datasend("Content-Type: text/html; charset=UTF-8\n");
+            $smtp->datasend("\n");
+            $smtp->datasend("$message\n\n");
+            $smtp->dataend();
+        }
 
-    $smtp->quit;
+        $smtp->quit;
+    }
 
     return;
 }
