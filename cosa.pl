@@ -8,7 +8,6 @@ use FindBin;
 use lib $FindBin::Bin;
 use DBI;
 use DBD::mysql;
-use Net::Patricia;
 use Net::Telnet;
 use Net::SMTP;
 use FileHandle;
