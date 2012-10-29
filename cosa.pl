@@ -129,7 +129,7 @@ my $airupdate_mode  = 'passive normal'; # Режим обновления про
 my $retries_alert   = '0.4';            # Переповторы больше этого числа будут отправляться на почту
 
 # Список разрешенных адресов для td
-my @td_allow  = ('172.16.0.0/12','192.168.150.82','10.10.10.0/24');
+my @td_allow  = ('10.10.10.0/24');
 
 # Список возможных паролей на устройства
 my @passwords = ("$passAS","$passBS","$passLN");
@@ -407,15 +407,15 @@ sub checkConfig {
     $t->cmd ('muff stat clear');
 
     # Замена "_" в имени на "-"
-    my $name = $host->{info}{name};
-    if ( $name =~ /_/ ) {
-        $_ = $name;
-        tr/_/-/;
-        $name = $_;
-        print "Replace \"_\" in name and promt...\n" if $verbose;
-        $t->cmd("sys name $name");
-        $t->cmd("sys promt $name");
-    }
+#    my $name = $host->{info}{name};
+#    if ( $name =~ /_/ ) {
+#        $_ = $name;
+#        tr/_/-/;
+#        $name = $_;
+#        print "Replace \"_\" in name and promt...\n" if $verbose;
+#        $t->cmd("sys name $name");
+#        $t->cmd("sys promt $name");
+#    }
 
     return;
 }
