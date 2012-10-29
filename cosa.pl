@@ -358,7 +358,7 @@ sub checkConfig {
     # пропускаем в тестовом режиме
     print "Checking td config...\n" if $verbose;
     if ( !$test_mode ) {
-        checkTD(\$host);
+        #checkTD(\$host);
     }
 
     # включение сервиса snmpd
