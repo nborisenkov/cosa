@@ -93,7 +93,7 @@ CPE-MESH: 1.17.9-CPE-MESH (type 2)
 Установка
 ===========================
 Для работы скрипта необходимы следующие perl модули:
-libnet-telnet-perl libdbi-perl libdbd-mysql-perl libnet-patricia-perl
+libnet-telnet-perl libdbi-perl libdbd-mysql-perl
 Так же необходимы настроеные mysql и ftp и web серверы.
 
 Ниже рассмотрена установка в директорию /storage/hd2/cosa на сервер с ОС Debian.
