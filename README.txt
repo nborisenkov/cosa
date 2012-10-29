@@ -87,16 +87,13 @@ R5000 (SkyMan). Скрипт заходит на устройства по пр�
 RMA: 4.29.10-MINI (type 0), 4.34.0-4.34.10
 MINT: 1.68.0 - 1.87.22
 CPE-MESH: 1.17.9-CPE-MESH (type 2)
+Для сохранения конфигов на FTP сервер, имена устройств не должны содержать пробелов
 
 
 Установка
 ===========================
 Для работы скрипта необходимы следующие perl модули:
-libnet-telnet-perl
-libdbi-perl
-libdbd-mysql-perl
-libnet-patricia-perl
-
+libnet-telnet-perl libdbi-perl libdbd-mysql-perl libnet-patricia-perl
 Так же необходимы настроеные mysql и ftp и web серверы.
 
 Ниже рассмотрена установка в директорию /storage/hd2/cosa на сервер с ОС Debian.
@@ -106,10 +103,15 @@ web-сервер и ftp-сервер находятся на этом же хо�
 1. Создание пользователя в системе для работы скрипта.
 adduser --home /storage/hd2/cosa cosa
 
-2. Распаковка файлов
-cp cosa.tar /storage/hd2/cosa
-cd /storage/hd2/cosa
-tar -xf cosa.tar
+2. Скачивание и Распаковка файлов
+
+rm /storage/hd2/cosa/*
+sudo -u cosa git clone git://github.com/nborisenkov/cosa.git /storage/hd2/cosa
+
+или скачать zip архив: https://github.com/nborisenkov/cosa/zipball/master
+и распаковать его содержимое в /storage/hd2/cosa
+
+chown cosa:cosa -R /storage/hd2/cosa/
 
 3. Установка vsftpd (http://support.infinet.ru/Forums/technicalIssues/747966824371)
 apt-get install vsftpd
@@ -122,26 +124,30 @@ local_umask=022
 chroot_local_user=YES
 ...
 
+service vsftpd restart
+
 4. Установка mysqld
 apt-get install mysql-server
 
 Создание базы данных и таблиц:
+cd /storage/hd2/cosa
 mysql -u root -p < cosa-install.sql
 
 Создание пользователя для доступа к базе данных:
 mysql> GRANT ALL PRIVILEGES ON cosa.* TO cosa_user@"%" IDENTIFIED BY 'cosa_passwd' WITH GRANT OPTION;
 
-FLUSH PRIVILEGES;
+mysql> FLUSH PRIVILEGES;
 
 5. Установка apache2
 apt-get install apache2
 
-Отредактируйте пути в файле apache2.site.example
+Отредактируйте пути и ip адреса в файле apache2.site.example
+Отредактируйте путь к css файлу в www/cgi-bin/configs.pl
 
 cp apache2.site.example /etc/apache2/sites-available/cosa
 a2ensite cosa
 a2enmod headers
-apache2ctl restart
+service apache2 restart
 
 6. Добавление задания в cron
 Запуск в 11 часов каждый день
@@ -150,6 +156,8 @@ apache2ctl restart
 01  11   * * *   cosa /usr/bin/perl /storage/hd2/cosa/cosa.pl > /storage/hd2/cosa/cosa.out
 ...
 
+7. Тестовый запуск:
+sudo -u cosa cosa.pl -v -t 10.10.10.1
 
 Параметры коммандной строки
 ===========================
@@ -167,10 +175,3 @@ apache2ctl restart
 
 * Примечания
 ==========================
-Для отключения прописывания qm правил, необходимо закомментировать строки:
-
-checkConfig ()
-...
-processQm($t,"rf$rf_ver", $ver);
-и
-my %clients = loadSpeedsFromBilling();
