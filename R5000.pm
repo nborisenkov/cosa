@@ -294,7 +294,7 @@ sub getInfo {
     my @uptime_out = $t->cmd ('sys uptime');
     my $uptime_str = join('', @uptime_out);
 
-    if ( $uptime_str =~ /UP (.*)\n/i) {
+    if ( $uptime_str =~ /(?:UP|Uptime:)\s+(.*)\n/i) {
         $uptime = Uptime2secs($1);
     } else {
         $uptime = '-1';
